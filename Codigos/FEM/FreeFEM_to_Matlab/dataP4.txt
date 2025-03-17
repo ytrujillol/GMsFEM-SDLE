@@ -1,3 +1,0 @@
-Number of Triangles	Iteration	L2Error	H1Error	Convergnce rate	Msize
-5884	0	1.01776	1.04691	0	0.0351284
-23536	1	1.01868	1.04702	0.999095	0.0175642

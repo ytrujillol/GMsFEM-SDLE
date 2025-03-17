@@ -1,3 +1,0 @@
-function y = fun(x)
-
-y = 0.1 + 0.1*sin(x) - (0.1 + 0.1*sin(x)).*u1(x) + 0.1*u1(x-1);
