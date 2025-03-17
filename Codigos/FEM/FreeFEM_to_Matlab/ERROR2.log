@@ -1,0 +1,28 @@
+   51 :     plot(Th, wait=true);
+   52 :   }
+   53 :   //to build a data file
+   54 :   {
+   55 :     namefile = "dataP4"+".txt";
+   56 :     ofstream ff(namefile);
+   57 :     ff << "Number of Triangles  Iteration       L2Error H1Error Con
+  ... : vergnce rate    Msize" << endl;
+   58 :     for(int i = 0; i < n; i++){
+   59 :         if(i > 0){
+   60 :           rate = L2error[i-1]/L2error[i];
+   61 :         }
+   62 :       ff << Ntraingles[i] << "  " << i << "     " << L2error[i] << "    " << H1error[i] << "    "  << rate << ""P^P_ << Msize[i]<<endl;
+   63 :     }
+   64 :   } sizestack + 1024 =5276  ( 4252 )
+ 
+  --  mesh:  Nb of Triangles =   5884, Nb of Vertices 3043
+  -- Solve :
+          min 5.45058e-64  max 0.127002
+L2Error 1.01776
+  -- Solve :
+          min 1.2357e-64  max 0.127051
+L2Error 1.01868
+times: compile 0.099s, execution 4.367s,  mpirank:0
+ ######## We forget of deleting   444 Nb pointer,   0Bytes  ,  mpirank 0, memory leak =0
+ CodeAlloc : nb ptr  4203,  size :522800 mpirank: 0
+Ok: Normal End
+ try getConsole C:\Users\ytruj\OneDrive\Desktop\Unal\TESIS\FEM\ERROR2.edp

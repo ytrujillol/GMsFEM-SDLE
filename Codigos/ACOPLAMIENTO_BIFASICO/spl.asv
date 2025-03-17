@@ -1,0 +1,11 @@
+function uh = spl(u,cxg,xf)
+
+N = length(u);
+I = 1:N-1;
+h = cxg(2) - cxg(1);
+% b = u(I) - (u(I+1) - u(I)).*cxg(I)/h;
+ 
+ 
+uh = ((u(I+1) - u(I))/h).*xf(I) + b
+
+%uh = 0.5*(u(I+1) - u(I));

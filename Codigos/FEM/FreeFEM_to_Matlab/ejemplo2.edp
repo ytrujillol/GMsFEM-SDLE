@@ -1,0 +1,52 @@
+include "ffmatlib.idp"
+int inside = 2; 
+int outside = 1;
+func f = x + x^2 - 2*x^3 + y + 8*x*y - 4*x^2*y + y^2 - 4*x*y^2 - 2*y^3;
+func k = 1 + x + y;
+func usol = x*(1-x)*y*(1-y);
+func dxusol = y*(1-y)*(1-2*x);
+func dyusol = x*(1-x)*(1-2*y);
+func g=0;       //  boundary condition function
+real L2error, H1error;
+real Ntraingles, Msize;
+real auxH1, auxL2, auxH1sol, auxL2sol;
+
+int n = 50;
+
+//Mesh
+border b1(t=0, 1){x=t; y=0; label=outside;};
+border b2(t=0, 1){x=1; y=t;label=outside;};
+border b3(t=1,0){x=t; y=1;label=outside;};
+border b4(t=0, 1){x=0; y=t;label=outside;};
+
+mesh Th = buildmesh(b1(n) + b2(n) + b3(n) + b4(-n));
+//mesh Th = square(n,n, [x, y]);
+
+plot(Th, wait=true);
+fespace Vh(Th, P1);
+Vh u,v;
+solve smoothcrack(u, v)
+    = int2d(Th)(k*(dx(u)*dx(v) + dy(u)*dy(v)))
+    - int2d(Th)(f*v)
+    + on(outside, u=g);
+    plot(u, value=true, fill=true, wait=true);
+
+Vh  h = hTriangle;
+Msize = h[].max;
+auxL2 = int2d(Th)((u - usol)^2);
+auxL2sol = int2d(Th)((usol)^2);
+auxH1 = int2d(Th)((dx(u) - dxusol)^2 + (dy(u) - dyusol)^2);
+auxH1sol = int2d(Th)((dxusol)^2 + (dyusol)^2);
+L2error = sqrt(auxL2/auxL2sol);
+H1error = sqrt(auxL2 + auxH1) / sqrt(auxL2sol + auxH1sol);
+
+cout << L2Error << endl;
+cout << H1error << endl;
+cout << Msize << endl;
+
+//Save mesh
+savemesh(Th,"capacitor.msh");
+//Save finite element space connectivity
+ffSaveVh(Th,Vh,"capacitor_vh.txt");
+//Save some scalar data
+ffSaveData(u,"capacitor_potential.txt");

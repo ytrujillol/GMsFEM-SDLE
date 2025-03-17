@@ -1,0 +1,181 @@
+function RH =SEMIBIFA(W,hx,hy,Nx,Ny,ux2,uy2,ux,uy)
+
+% W: water
+
+%M: 1-W
+
+b=2;
+  
+
+%  fWy=zeros(Nx,Ny);
+%  fWx=zeros(Nx,Ny);
+
+% Let' determine H(u)/u
+% fWx=ux.*fluxW(W);
+% fWy=uy.*fluxW(W);
+
+ fWx=fluxW(W);
+ fWy=fluxW(W);
+
+
+
+
+  %fWx(1,: )=1;
+% fWy(:,1)=0;
+% fWy(1,:)=0;
+
+    W_jx = (1/hx)*Ajx(W,2,Nx,Ny) ;
+
+    W_jy = (1/hy)*Ajy(W,2,Nx,Ny);
+
+        
+ 
+     J=2:Ny-1;     
+     I=2:Nx-1;
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+   Wmx(I,J)=W(I+1,J)-0.25*hx*(W_jx(I+1,J));
+   Wmmx(I,J)=W(I,J)+0.25*hx*(W_jx(I,J));
+   
+   bWx(I,J)=b*max(max(abs( ux2(I,J).*fWx(I,J)+ux2(I+1,J).*fWx(I+1,J)  )));
+   
+  
+   FWx(I,J)=0.25*(bWx(I,J).*(Wmmx(I,J)-Wmx(I,J)) + (ux2(I+1,J).*fWx(I,J)+ux(I+1,J).*fWx(I+1,J)).*( Wmmx(I,J)+Wmx(I,J))     );
+   
+   Hwx(I,J)= -(1/hx).*(FWx(I,J)-FWx(I-1,J));
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+   
+   
+
+ Wmy(I,J)=W(I,J+1)-0.25*hy*(W_jy(I,J+1));
+ Wmmy(I,J)=W(I,J)+0.25*hy*(W_jy(I,J));
+   
+   
+
+  bWy(I,J)=b*max(max(abs( uy2(I,J).*fWy(I,J)+uy2(I,J+1).*fWy(I,J+1)  )));
+  
+  FWy(I,J)=0.25*(bWy(I,J).*(Wmmy(I,J)-Wmy(I,J)) + (uy2(I,J).*fWy(I,J)+uy2(I,J+1).*fWy(I,J+1)).*( Wmmy(I,J)+Wmy(I,J))     );
+   
+  Hwy(I,J)= -(1/hy).*(FWy(I,J)-FWy(I,J-1)); 
+   
+
+  
+  % 
+   
+   %%% Canto inferior
+   
+   
+   FWx(I,J)=0.25*(bWx(I,J).*(Wmmx(I,J)-Wmx(I,J)) + (ux2(I+1,J).*fWx(I,J)+ux(I+1,J).*fWx(I+1,J)).*( Wmmx(I,J)+Wmx(I,J))     );
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+    
+       
+
+        %  O MInmod                         
+%         W_j =(1/h)* vj(W,2);
+%         G_j =(1/h)* vj(G,2);
+
+   % ul(1,:) = ones(size(ul(1,:)));   
+ % FOR THE WATER w 
+       
+       Wmx(1,J)=W(2,J)-0.25*hx*(W_jx(2,J)); %Wmx(2,J);%ones(size(Wmx(1,:))); %
+       Wmx(Nx,J)=Wmx(Nx-1,J); 
+       
+       % A aproximação de u(xj+1/2)  menos no tempo t
+       
+       
+       Wmmx(1,J)= W(1,J)+0.25*hx*(W_jx(1,J));% %
+       Wmmx(Nx,J)=W(Nx,J)+0.25*hx*(W_jx(Nx,J));
+       
+  
+  
+  
+  
+   
+   
+   bWx(1,J)= b*max(max(abs( ux2(1,J).*fWx(1,J)+ux2(2,J).*fWx(2,J)  ))   );
+   bWx(Nx,J)=b*max(max(abs( ux2(Nx,J).*fWx(Nx,J)+ux2(Nx,J).*fWx(Nx-1,J)  )));         %  bWx(Nx-1,J);
+
+%    
+%  
+ % NUMERICAL FLUX FOR H      
+          
+  %%% LE Lagrangian-Eulerian  with reconstruction% Outra forma
+   FWx(1,J)=0.25*(bWx(1,J).*(Wmmx(1,J)-Wmx(1,J)) + (ux2(1,J).*fWx(1,J)+ux(1,J).*fWx(2,J)).*( Wmmx(1,J)+Wmx(1,J))); 
+   FWx(Nx,J)=0.25*(bWx(Nx,J).*(Wmmx(Nx,J)-Wmx(Nx,J)) + (ux2(Nx,J).*fWx(Nx,J)+ux2(Nx,J).*fWx(Nx,J)).*( Wmmx(Nx,J)+Wmx(Nx,J))     );; %FWx(Nx-1,J); 
+     
+    
+
+
+% NUMERICAL FLUX FOR WATER   
+
+Hwx(1,J)=-(1/hx).*(FWx(1,J)-FWx(1,J));  
+Hwx(Nx,J)=Hwx(Nx-1,J);%-(1/hx).*(FWx(Nx,J)-FWx(Nx-1,J)); 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+I=1:Nx;
+         J=2:Ny-1;
+       
+         
+         
+        
+         
+       % FOR THE WATER w 
+    
+       Wmy(I,1)=W(I,2)-0.25*hy*(W_jy(I,2));%Wmy(I,2); 
+       Wmy(I,Ny)=Wmy(I,Ny-1); 
+       
+       % A aproximação de u(xj+1/2)  menos no tempo t
+       
+       Wmmy(I,1)=(W(I,1)+0.25*hy*(W_jy(I,1)));
+       Wmmy(I,Ny)=(W(I,Ny)+0.25*hy*(W_jy(I,Ny)));
+       
+  
+  
+  
+  
+  
+   
+   bWy(I,J)=b*max(max(abs( uy2(I,J).*fWy(I,J)+uy2(I,J+1).*fWy(I,J+1)  )));
+   bWy(I,1)=b*max(max(abs( uy2(I,1).*fWy(I,1)+uy2(I,2).*fWy(I,2)  )));
+   bWy(I,Ny)=b*max(max(abs(uy2(I,Ny).*fWy(I,Ny)+uy2(I,Ny).*fWy(I,Ny-1)  )));
+
+%    
+%  
+ % NUMERICAL FLUX FOR H      
+          
+  %%% LE Lagrangian-Eulerian  with reconstruction% Outra forma
+   FWy(I,J)=0.25*(bWy(I,J).*(Wmmy(I,J)-Wmy(I,J)) + (uy2(I,J).*fWy(I,J)+uy2(I,J+1).*fWy(I,J+1)).*( Wmmy(I,J)+Wmy(I,J))     );
+   FWy(I,1)=0.25*(bWy(I,1).*(Wmmy(I,1)-Wmy(I,1)) + (uy2(I,1).*fWy(I,1)+uy2(I,2).*fWy(I,2)).*( Wmmy(I,1)+Wmy(I,1))     );
+   FWy(I,Ny)=0.25*(bWy(I,Ny).*(Wmmy(I,Ny)-Wmy(I,Ny)) +(uy2(I,Ny).*fWy(I,Ny)+uy2(I,Ny).*fWy(I,2)).*( Wmmy(I,1)+Wmy(I,1))     ); 
+     
+    
+
+
+% NUMERICAL FLUX FOR WATER   
+
+Hwy(I,1)= -(1/hy).*(FWy(I,1)-FWy(I,Ny)); 
+Hwy(I,Ny)=-(1/hy).*(FWy(I,Ny)-FWy(I,Ny-1));  
+        
+RH =Hwx+Hwy;
